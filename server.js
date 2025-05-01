@@ -204,6 +204,29 @@ io.on('connection', (socket) => {
     console.log(`Room privée créée ${code} par ${socket.id}`);
   });
 
+    // Gestion du “quitter la partie” volontaire
+  socket.on('leaveGame', ({ roomId }) => {
+    const game = games.get(roomId);
+    if (!game) return;
+
+    // Retirer le joueur de la room
+    const idx = game.players.findIndex(p => p.id === socket.id);
+    if (idx !== -1) {
+      game.players.splice(idx, 1);
+      socket.leave(roomId);
+
+      // Informer les autres joueurs
+      broadcastToRoom(roomId, 'playerLeft', { player: socket.id });
+
+      // Si plus assez de joueurs pour continuer, on termine la partie
+      if (game.players.length < 2) {
+        games.delete(roomId);
+        broadcastToRoom(roomId, 'gameOver', { winner: null });
+      }
+    }
+  });
+
+
   // Le joueur rejoint une partie privée existante via un code
   socket.on('joinPrivate', ({ code }) => {
     const game = games.get(code);
