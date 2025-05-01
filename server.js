@@ -309,3 +309,13 @@ const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
 });
+
+// Route de base pour vérifier que le serveur tourne
+app.get('/', (req, res) => {
+  res.status(200).send('🕹️ 007 Game Server is up and running!');
+});
+
+// (optionnel) route santé pour les checks uptime
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
