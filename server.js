@@ -305,7 +305,7 @@ io.on('connection', (socket) => {
 });
 
 // Démarrer le serveur HTTP + Socket.IO
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
 });
